@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fire Unit Calculation</title>
+</head>
+    <style>
+        body {
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 550px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        label {
+            font-size: 0.9em;
+            color: #555;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 12px;
+        }
+        input[type="number"], select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 5px;
+        }
+         .radio-group {
+            display: inline-block;
+            justify-content: space-evenly;
+            margin-right: 200px;
+        
+
+        }
+
+        .checkbox-group{
+           
+            display:inline-block ;
+        }
+
+        input[type="checkbox"], input[type="radio"]{
+            margin-right: 5px;
+            
+        }
+
+     
+
+        button {
+            margin-top: 20px;
+            width: 100%;
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 15px;
+            text-align: center;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>AMTAB CALCULATOR</h2>
+        <div class="input-group">
+            <label for="gunA">105 MM IFG/LFG/ABBOT (%):</label>
+            <input type="number" id="gunA" min="0" max="100" value="0">
+        </div>
+        <div class="input-group">
+            <label for="gunB">130 MM/122 MM (%):</label>
+            <input type="number" id="gunB" min="0" max="100" value="0">
+        </div>
+        <div class="input-group">
+            <label for="gunC">155 MM (%):</label>
+            <input type="number" id="gunC" min="0" max="100" value="0">
+        </div>
+        <div class="input-group">
+            <label for="gunD">120 MM MOR (%):</label>
+            <input type="number" id="gunD" min="0" max="100" value="0">
+        </div>
+        <div class="input-group">
+            <label for="fireUnit">Fire Unit:</label>
+            <select id="fireUnit">
+                <option value="1B">1 X BTY</option>
+                <option value="2B">2 X BTY</option>
+                <option value="1R">1 X REGT</option>
+                <option value="2R">2 X REGT</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label for="sizeRange">Size Range:</label>
+            <select id="sizeRange">
+                <option value="150">150 METERS SQUARE</option>
+                <option value="200">200 METERS SQUARE</option>
+                <option value="250">250 METERS SQUARE</option>
+                <option value="300">300 METERS SQUARE</option>
+            </select>
+        </div>
+        <div class="radio-group">
+            <label> </label>
+            <label><input type="radio" name="terrain" value="open" checked> TPS IN OPEN</label>
+            <label><input type="radio" name="terrain" value="close"> ENTRENCHED</label>
+        </div>
+        <div class="radio-group">
+            <label></label>
+            <label><input type="radio" name="modHigh" value="moderate" checked> MOD</label>
+            <label><input type="radio" name="modHigh" value="high"> HY</label>
+        </div>
+        <div class="checkbox-group">
+            <label><input type="checkbox" id="snow"> Mtnd/Sandy/Snow bound</label>
+            <label><input type="checkbox" id="amn"> Amn VT</label>
+        </div>
+        <div class="checkbox-group">
+            <label><input type="checkbox" id="mech"> Mech time/Rkt</label>
+            <label><input type="checkbox" id="ha"> H/A</label>
+        </div>
+        <div class="checkbox-group">
+            <label><input type="checkbox" id="sphb"> SPHBs</label>
+            <label><input type="checkbox" id="ohp"> OHP x 3</label>
+        </div>
+        <div class="checkbox-group">
+            <label><input type="checkbox" id="ohpfour"> OHP x 4</label>
+        </div>
+        <button onclick="calculateFireUnits()">Calculate</button>
+        <p id="result"></p>
+    </div>
+
+
+    <script>
+        const baseFireUnitsData = {
+            "A": {
+                "1B": {
+                    "150": { "open": { "moderate": 5, "high": 7 }, "close": { "moderate": 23, "high": 35 } },
+                    "200": { "open": { "moderate": 8, "high": 12 }, "close": { "moderate": 39, "high": 60 } },
+                    "250": { "open": { "moderate": 12, "high": 18 }, "close": { "moderate": 0, "high": 0 } },
+                    "300": { "open": { "moderate": 18, "high": 27 }, "close": { "moderate": 0, "high": 0 } }
+                },
+                "2B": {
+                    "150": { "open": { "moderate": 2, "high": 3 }, "close": { "moderate": 10, "high": 15 } },
+                    "200": { "open": { "moderate": 4, "high": 5 }, "close": { "moderate": 16, "high": 25 } },
+                    "250": { "open": { "moderate": 5, "high": 8 }, "close": { "moderate": 0, "high": 0 } },
+                    "300": { "open": { "moderate": 7, "high": 21 }, "close": { "moderate": 0, "high": 0 } }
+                },
+                "1R": {
+                    "150": { "open": { "moderate": 0, "high": 2 }, "close": { "moderate": 6, "high": 9 } },
+                    "200": { "open": { "moderate": 2, "high": 3 }, "close": { "moderate": 8, "high": 12 } },
+                    "250": { "open": { "moderate": 3, "high": 4 }, "close": { "moderate": 9, "high": 13 } },
+                    "300": { "open": { "moderate": 4, "high": 6 }, "close": { "moderate": 13, "high": 19 } }
+                },
+                "2R": {
+                    "150": { "open": { "moderate": 0, "high": 1 }, "close": { "moderate": 3, "high": 4 } },
+                    "200": { "open": { "moderate": 1, "high": 0 }, "close": { "moderate": 3, "high": 4 } },
+                    "250": { "open": { "moderate": 0, "high": 0 }, "close": { "moderate": 3, "high": 5 } },
+                    "300": { "open": { "moderate": 2, "high": 3 }, "close": { "moderate": 6, "high": 9 } }
+                }
+            },
+            "B": {
+                "1B": {
+                    "150": { "open": { "moderate": 4, "high": 5 }, "close": { "moderate": 17, "high": 25 } },
+                    "200": { "open": { "moderate": 6, "high": 9 }, "close": { "moderate": 25, "high": 41 } },
+                    "250": { "open": { "moderate": 9, "high": 13 }, "close": { "moderate": 0, "high": 0 } },
+                    "300": { "open": { "moderate": 13, "high": 20 }, "close": { "moderate": 0, "high": 0 } }
+                },
+                "2B": {
+                    "150": { "open": { "moderate": 2, "high": 2 }, "close": { "moderate": 7, "high": 11 } },
+                    "200": { "open": { "moderate": 3, "high": 4 }, "close": { "moderate": 11, "high": 17 } },
+                    "250": { "open": { "moderate": 4, "high": 6 }, "close": { "moderate": 14, "high": 22 } },
+                    "300": { "open": { "moderate": 5, "high": 8 }, "close": { "moderate": 0, "high": 0 } }
+                },
+                "1R": {
+                    "150": { "open": { "moderate": 0, "high": 0 }, "close": { "moderate": 4, "high": 7 } },
+                    "200": { "open": { "moderate": 2, "high": 2 }, "close": { "moderate": 6, "high": 9 } },
+                    "250": { "open": { "moderate": 2, "high": 3 }, "close": { "moderate": 7, "high": 9 } },
+                    "300": { "open": { "moderate": 3, "high": 5 }, "close": { "moderate": 9, "high": 14 } }
+                },
+                "2R": {
+                    "150": { "open": { "moderate": 0, "high": 0 }, "close": { "moderate": 2, "high": 3 } },
+                    "200": { "open": { "moderate": 0, "high": 1 }, "close": { "moderate": 2, "high": 3 } },
+                    "250": { "open": { "moderate": 1, "high": 0 }, "close": { "moderate": 2, "high": 4 } },
+                    "300": { "open": { "moderate": 0, "high": 2 }, "close": { "moderate": 4, "high": 7 } }
+                }
+            },
+
+            "C": {
+                "1B": {
+                    "150": { "open": { "moderate": 2, "high": 3 }, "close": { "moderate": 10, "high": 14 } },
+                    "200": { "open": { "moderate": 4, "high": 5 }, "close": { "moderate": 16, "high": 24 } },
+                    "250": { "open": { "moderate": 5, "high": 8 }, "close": { "moderate": 0, "high": 0 } },
+                    "300": { "open": { "moderate": 8, "high": 11 }, "close": { "moderate": 0, "high": 0 } }
+                },
+                "2B": {
+                    "150": { "open": { "moderate": 1, "high": 2 }, "close": { "moderate": 4, "high": 6 } },
+                    "200": { "open": { "moderate": 2, "high": 2 }, "close": { "moderate": 7, "high": 10 } },
+                    "250": { "open": { "moderate": 2, "high": 4 }, "close": { "moderate": 0, "high": 0 } },
+                    "300": { "open": { "moderate": 3, "high": 5 }, "close": { "moderate": 0, "high": 0 } }
+                },
+                "1R": {
+                    "150": { "open": { "moderate": 0, "high": 1 }, "close": { "moderate": 3, "high": 2 } },
+                    "200": { "open": { "moderate": 1, "high": 0 }, "close": { "moderate": 4, "high": 3 } },
+                    "250": { "open": { "moderate": 2, "high": 2 }, "close": { "moderate": 4, "high": 6 } },
+                    "300": { "open": { "moderate": 2, "high": 3 }, "close": { "moderate": 6, "high": 8 } }
+                },
+                "2R": {
+                    "150": { "open": { "moderate": 0, "high": 1 }, "close": { "moderate": 2, "high": 2 } },
+                    "200": { "open": { "moderate": 1, "high": 0 }, "close": { "moderate": 2, "high": 2 } },
+                    "250": { "open": { "moderate": 0, "high": 0 }, "close": { "moderate": 2, "high": 2 } },
+                    "300": { "open": { "moderate": 1, "high": 2 }, "close": { "moderate": 3, "high": 4 } }
+                }
+            },
+
+            "D": {
+                "1B": {
+                    "150": { "open": { "moderate": 4, "high": 6 }, "close": { "moderate": 20, "high": 30 } },
+                    "200": { "open": { "moderate": 7, "high": 11 }, "close": { "moderate": 33, "high": 52 } },
+                    "250": { "open": { "moderate": 18, "high": 16 }, "close": { "moderate": 0, "high": 0 } },
+                    "300": { "open": { "moderate": 16, "high": 23 }, "close": { "moderate": 0, "high": 0 } }
+                },
+                "1R": {
+                    "150": { "open": { "moderate": 2, "high": 2 }, "close": { "moderate": 9, "high": 13 } },
+                    "200": { "open": { "moderate": 3, "high": 4 }, "close": { "moderate": 14, "high": 22 } },
+                    "250": { "open": { "moderate": 4, "high": 7 }, "close": { "moderate": 17, "high": 26 } },
+                    "300": { "open": { "moderate": 6, "high": 10 }, "close": { "moderate": 0, "high": 0 } }
+                }
+            }
+        };
+
+        const fireUnitMultipliers = {
+            "1B": 6,
+            "2B": 8,
+            "1R": 18,
+            "2R": 36
+        };
+
+        function calculateFireUnits() {
+            const gunPercents = {
+                "A": parseInt(document.getElementById('gunA').value),
+                "B": parseInt(document.getElementById('gunB').value),
+                "C": parseInt(document.getElementById('gunC').value),
+                "D": parseInt(document.getElementById('gunD').value)
+            };
+
+            const totalPercentage = Object.values(gunPercents).reduce((acc, val) => acc + val, 0);
+
+            if (totalPercentage !== 100) {
+                document.getElementById('result').textContent = "Total percentage must add up to 100.";
+                return;
+            }
+
+            const fireUnit = document.getElementById('fireUnit').value;
+            const sizeRange = document.getElementById('sizeRange').value;
+            const terrain = document.querySelector('input[name="terrain"]:checked').value;
+            const modHigh = document.querySelector('input[name="modHigh"]:checked').value;
+
+            const isSnowChecked = document.getElementById('snow').checked;
+            const isAmnChecked = document.getElementById('amn').checked;
+            const isMechChecked = document.getElementById('mech').checked;
+            const isHaChecked = document.getElementById('ha').checked;
+            const isSphbeChecked = document.getElementById('sphb').checked;
+            const isOhpChecked = document.getElementById('ohp').checked;
+            const isOhpfourChecked = document.getElementById('ohpfour').checked;
+
+            let totalFireUnits = 0;
+
+            for (const [gun, percent] of Object.entries(gunPercents)) {
+                let baseFireUnits = baseFireUnitsData[gun]?.[fireUnit]?.[sizeRange]?.[terrain]?.[modHigh];
+
+                if (baseFireUnits !== undefined) {
+                    if (isSnowChecked) {
+                        baseFireUnits *= 1.5;
+                    }
+                    if (isAmnChecked) {
+                        baseFireUnits *= 0.5;
+                    }
+                    if (isMechChecked) {
+                        baseFireUnits *= 0.3;
+                    }
+                    if (isHaChecked) {
+                        baseFireUnits *= 1.25;
+                    }
+                    if (isSphbeChecked) {
+                        baseFireUnits *= 1.25;
+                    }
+                    if (isOhpChecked) {
+                        baseFireUnits *= 3;
+                    }
+                    if (isOhpfourChecked) {
+                        baseFireUnits *= 4;
+                    }
+
+                    const multiplier = fireUnitMultipliers[fireUnit] || 1;
+                    totalFireUnits += (baseFireUnits * multiplier * (percent / 100));
+                }
+            }
+
+            document.getElementById('result').textContent = `Total Fire Units: ${totalFireUnits.toFixed(2)}`;
+
+        }
+    </script>
+</body>
+</html>
