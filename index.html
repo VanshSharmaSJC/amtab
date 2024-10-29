@@ -12,7 +12,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            height: 150vh;
             margin: 0;
         }
         .container {
@@ -83,6 +83,35 @@
             font-weight: bold;
             color: #333;
         }
+
+        .calculator {
+            max-width: 300px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            text-align: center;
+        }
+        input[type="number"], select {
+            width: 80%;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            text-align: left;
+        }
     </style>
 </head>
 <body>
@@ -149,6 +178,24 @@
         </div>
         <button onclick="calculateFireUnits()">Calculate</button>
         <p id="result"></p>
+
+        <div class="calculator">
+            <h2>Comparative Ratios</h2>
+            <p>Select a gun type:</p>
+            <select id="selectedGun">
+                <option value="A">IFG</option>
+                <option value="B">130 MM</option>
+                <option value="C">120 MM</option>
+                <option value="D">81 MM</option>
+                <option value="E">155 MM</option>
+                <option value="F">122 MM</option>
+                <option value="G">160 MM</option>
+            </select>
+            <input type="number" id="fireUnits1" placeholder="Enter fire units" step="0.1">
+            <button onclick="calculateFireUnits1()">Calculate</button>
+
+            <div class="result1" id="result1"></div>
+        </div>
     </div>
 
 
@@ -318,9 +365,45 @@
                 }
             }
 
-            document.getElementById('result').textContent = `Total Fire Units: ${totalFireUnits.toFixed(2)}`;
+            document.getElementById('result').textContent = `Total Rounds: ${totalFireUnits.toFixed(2)}`;
 
         }
+        const ratios = {
+            A: 1.0,
+            B: 1.38,
+            C: 1.16,
+            D: 0.44,
+            E: 2.5,
+            F: 1.39,
+            G: 2.19
+        };
+
+        function calculateFireUnits1() {
+    const selectedGun = document.getElementById("selectedGun").value;
+    const inputUnits = parseFloat(document.getElementById("fireUnits1").value);
+
+    // Begin creating the result text as a string with HTML tags properly enclosed
+    let resultText = `<strong>Calculated equivalent rounds based on ${
+        document.getElementById("selectedGun").options[document.getElementById("selectedGun").selectedIndex].text
+    } (${inputUnits} units):</strong><ul>`;
+
+    // Loop through each gun and ratio to calculate equivalent fire units
+    for (const [gun, ratio] of Object.entries(ratios)) {
+        const fireUnits = (inputUnits * ratio / ratios[selectedGun]).toFixed(2);
+        resultText += `<li>${
+            document.getElementById("selectedGun").options[
+                Array.from(document.getElementById("selectedGun").options).findIndex(opt => opt.value === gun)
+            ].text
+        }: ${fireUnits} rounds</li>`;
+    }
+
+    // Close the list in the HTML string
+    resultText += "</ul>";
+    
+    // Display the result in the result div
+    document.getElementById("result1").innerHTML = resultText;
+}
+
     </script>
 </body>
 </html>
