@@ -15,7 +15,7 @@
 
         h1 {
             text-align: center;
-            color: #007BFF;
+            color: #28a745;
             margin-bottom: 20px;
         }
 
@@ -97,7 +97,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Fire Unit Calculation</h1>
+        <h1>AMTAB</h1>
 
         <label for="gun">Gun:</label>
         <select id="gun">
@@ -167,199 +167,211 @@
         <button id="distributeButton" style="display:none;">Distribute Rounds</button>
         <p id="result"></p>
     </div>
+
+    <script>
+        const baseFireUnitsData = {
+            "A": {
+                "1B": {
+                    "150": { "open": { "moderate": 5, "high": 7 }, "close": { "moderate": 23, "high": 35 } },
+                    "200": { "open": { "moderate": 8, "high": 12 }, "close": { "moderate": 39, "high": 60 } },
+                    "250": { "open": { "moderate": 12, "high": 18 }, "close": { "moderate": 0, "high": 0 } },
+                    "300": { "open": { "moderate": 18, "high": 27 }, "close": { "moderate": 0, "high": 0 } }
+                },
+                "2B": {
+                    "150": { "open": { "moderate": 2, "high": 3 }, "close": { "moderate": 10, "high": 15 } },
+                    "200": { "open": { "moderate": 4, "high": 5 }, "close": { "moderate": 16, "high": 25 } },
+                    "250": { "open": { "moderate": 5, "high": 8 }, "close": { "moderate": 0, "high": 0 } },
+                    "300": { "open": { "moderate": 7, "high": 21 }, "close": { "moderate": 0, "high": 0 } }
+                },
+                "1R": {
+                    "150": { "open": { "moderate": 0, "high": 2 }, "close": { "moderate": 6, "high": 9 } },
+                    "200": { "open": { "moderate": 2, "high": 3 }, "close": { "moderate": 8, "high": 12 } },
+                    "250": { "open": { "moderate": 3, "high": 4 }, "close": { "moderate": 9, "high": 13 } },
+                    "300": { "open": { "moderate": 7, "high": 21 }, "close": { "moderate": 0, "high": 0 } }
+                },
+                "2R": {
+                    "150": { "open": { "moderate": 0, "high": 1 }, "close": { "moderate": 3, "high": 4 } },
+                    "200": { "open": { "moderate": 1, "high": 0 }, "close": { "moderate": 3, "high": 4 } },
+                    "250": { "open": { "moderate": 0, "high": 0 }, "close": { "moderate": 3, "high": 5 } },
+                    "300": { "open": { "moderate": 2, "high": 3 }, "close": { "moderate": 0, "high": 0 } }
+                }
+            },
+            "B": {
+                "1B": {
+                    "150": { "open": { "moderate": 4, "high": 5 }, "close": { "moderate": 17, "high": 25 } },
+                    "200": { "open": { "moderate": 6, "high": 9 }, "close": { "moderate": 25, "high": 41 } },
+                    "250": { "open": { "moderate": 9, "high": 13 }, "close": { "moderate": 0, "high": 0 } },
+                    "300": { "open": { "moderate": 13, "high": 20 }, "close": { "moderate": 0, "high": 0 } }
+                },
+                "2B": {
+                    "150": { "open": { "moderate": 2, "high": 2 }, "close": { "moderate": 7, "high": 11 } },
+                    "200": { "open": { "moderate": 3, "high": 4 }, "close": { "moderate": 11, "high": 17 } },
+                    "250": { "open": { "moderate": 4, "high": 6 }, "close": { "moderate": 14, "high": 22 } },
+                    "300": { "open": { "moderate": 5, "high": 8 }, "close": { "moderate": 0, "high": 0 } }
+                },
+                "1R": {
+                    "150": { "open": { "moderate": 0, "high": 0 }, "close": { "moderate": 4, "high": 7 } },
+                    "200": { "open": { "moderate": 2, "high": 2 }, "close": { "moderate": 6, "high": 9 } },
+                    "250": { "open": { "moderate": 2, "high": 3 }, "close": { "moderate": 7, "high": 9 } },
+                    "300": { "open": { "moderate": 3, "high": 5 }, "close": { "moderate": 9, "high": 14 } }
+                },
+                "2R": {
+                    "150": { "open": { "moderate": 0, "high": 0 }, "close": { "moderate": 2, "high": 3 } },
+                    "200": { "open": { "moderate": 0, "high": 1 }, "close": { "moderate": 2, "high": 3 } },
+                    "250": { "open": { "moderate": 1, "high": 0 }, "close": { "moderate": 2, "high": 4 } },
+                    "300": { "open": { "moderate": 0, "high": 2 }, "close": { "moderate": 4, "high": 7 } }
+                }
+            },
+
+            "C": {
+                "1B": {
+                    "150": { "open": { "moderate": 2, "high": 3 }, "close": { "moderate": 10, "high": 14 } },
+                    "200": { "open": { "moderate": 4, "high": 5 }, "close": { "moderate": 16, "high": 24 } },
+                    "250": { "open": { "moderate": 5, "high": 8 }, "close": { "moderate": 0, "high": 0 } },
+                    "300": { "open": { "moderate": 8, "high": 11 }, "close": { "moderate": 0, "high": 0 } }
+                },
+                "2B": {
+                    "150": { "open": { "moderate": 1, "high": 2 }, "close": { "moderate": 4, "high": 6 } },
+                    "200": { "open": { "moderate": 2, "high": 2 }, "close": { "moderate": 7, "high": 10 } },
+                    "250": { "open": { "moderate": 2, "high": 4 }, "close": { "moderate": 0, "high": 0 } },
+                    "300": { "open": { "moderate": 3, "high": 5 }, "close": { "moderate": 0, "high": 0 } }
+                },
+                "1R": {
+                    "150": { "open": { "moderate": 0, "high": 1 }, "close": { "moderate": 3, "high": 2 } },
+                    "200": { "open": { "moderate": 1, "high": 0 }, "close": { "moderate": 4, "high": 3 } },
+                    "250": { "open": { "moderate": 2, "high": 2 }, "close": { "moderate": 4, "high": 6 } },
+                    "300": { "open": { "moderate": 2, "high": 3 }, "close": { "moderate": 6, "high": 8 } }
+                },
+                "2R": {
+                    "150": { "open": { "moderate": 0, "high": 1 }, "close": { "moderate": 2, "high": 2 } },
+                    "200": { "open": { "moderate": 1, "high": 0 }, "close": { "moderate": 2, "high": 2 } },
+                    "250": { "open": { "moderate": 0, "high": 0 }, "close": { "moderate": 2, "high": 2 } },
+                    "300": { "open": { "moderate": 1, "high": 2 }, "close": { "moderate": 3, "high": 4 } }
+                }
+            },
+
+            "D": {
+                "1B": {
+                    "150": { "open": { "moderate": 4, "high": 6 }, "close": { "moderate": 20, "high": 30 } },
+                    "200": { "open": { "moderate": 7, "high": 11 }, "close": { "moderate": 33, "high": 52 } },
+                    "250": { "open": { "moderate": 18, "high": 16 }, "close": { "moderate": 0, "high": 0 } },
+                    "300": { "open": { "moderate": 16, "high": 23 }, "close": { "moderate": 0, "high": 0 } }
+                },
+                "1R": {
+                    "150": { "open": { "moderate": 2, "high": 2 }, "close": { "moderate": 9, "high": 13 } },
+                    "200": { "open": { "moderate": 3, "high": 4 }, "close": { "moderate": 14, "high": 22 } },
+                    "250": { "open": { "moderate": 4, "high": 7 }, "close": { "moderate": 17, "high": 26 } },
+                    "300": { "open": { "moderate": 6, "high": 10 }, "close": { "moderate": 6, "high": 8 } }
+                }
+            }
+        };
+        const fireUnitMultipliers = {
+            "1B": 6,
+            "2B": 8,
+            "1R": 18,
+            "2R": 36
+        };
+
+        const calculateFireUnits = () => {
+
+            const selectedGun = document.getElementById('gun').value;
+            const selectedFireUnit = document.getElementById('fireUnit').value;
+            const selectedSize = document.getElementById('sizeRange').value;
+            const selectedTerrain = document.querySelector('input[name="terrain"]:checked').value;
+            const selectedModHigh = document.querySelector('input[name="modHigh"]:checked').value;
+
+            const isSnowChecked = document.getElementById('snow').checked;
+            const isAmnChecked = document.getElementById('amn').checked;
+            const isMechChecked = document.getElementById('mech').checked;
+            const isHaChecked = document.getElementById('ha').checked;
+            const isSphbeChecked = document.getElementById('sphb').checked;
+            const isOhptwoChecked = document.getElementById('ohptwo').checked;
+            const isOhpChecked = document.getElementById('ohp').checked;
+            const isOhpfourChecked = document.getElementById('ohpfour').checked;
+
+
+            const baseFireUnits = baseFireUnitsData[selectedGun][selectedFireUnit][selectedSize][selectedTerrain][selectedModHigh];
+
+            let totalMultiplier = 1;
+            if (isSnowChecked) totalMultiplier += 1.5 - 1; // Add 50% extra
+            if (isAmnChecked) totalMultiplier += 0.5 - 1; // Subtract 50%
+            if (isMechChecked) totalMultiplier += 0.3 - 1; // Subtract 70%
+            if (isHaChecked) totalMultiplier += 1.25 - 1; // Add 25%
+            if (isSphbeChecked) totalMultiplier += 1.25 - 1; // Add 25%
+            if (isOhptwoChecked) totalMultiplier += 2 - 1; // Add 100%
+            if (isOhpChecked) totalMultiplier += 3 - 1; // Add 200%
+            if (isOhpfourChecked) totalMultiplier += 4 - 1; // Add 300%
+            let totalFireUnits = baseFireUnits * totalMultiplier;
+
+            if (baseFireUnits !== undefined) {
+                    const selectedFireUnit = document.getElementById('fireUnit').value;
+
+                const multiplier = fireUnitMultipliers[selectedFireUnit] || 1; // Default to 1 if no multiplier found
+                totalFireUnits = totalFireUnits * multiplier;
+
+                document.getElementById('result').textContent = `Total Rounds: ${totalFireUnits}`;
+            } else {
+                document.getElementById('result').textContent = 'Invalid selection. Please check your inputs.';
+            }
+            return totalFireUnits;
+        };
+
+        const distributeFireUnits = (totalFireUnits) => {
+            const percentageA = parseFloat(document.getElementById('percentageA').value) || 0;
+            const percentageB = parseFloat(document.getElementById('percentageB').value) || 0;
+            const percentageC = parseFloat(document.getElementById('percentageC').value) || 0;
+            const percentageD = parseFloat(document.getElementById('percentageD').value) || 0;
+
+            const totalPercentage = percentageA + percentageB + percentageC + percentageD;
+
+            if (totalPercentage === 0) {
+                return { A: 0, B: 0, C: 0, D: 0 };
+            }
+
+            return {
+                A: (totalFireUnits * (percentageA / totalPercentage)).toFixed(2),
+                B: (totalFireUnits * (percentageB / totalPercentage)).toFixed(2),
+                C: (totalFireUnits * (percentageC / totalPercentage)).toFixed(2),
+                D: (totalFireUnits * (percentageD / totalPercentage)).toFixed(2),
+            };
+        };
+
+        document.getElementById('calculateButton').addEventListener('click', () => {
+            const totalFireUnits = calculateFireUnits();
+            const resultText = `Total Fire Units: ${totalFireUnits}`;
+            document.getElementById('result').innerText = resultText;
+            document.getElementById('percentageInputs').style.display = 'block';  // Show percentage inputs
+            document.getElementById('distributeButton').style.display = 'block'; // Show distribute button
+        });
+    const comparativeRatios = { "A": 1.0, "B": 1.38, "C": 1.16, "D": 0.44 };
+        document.getElementById('distributeButton').addEventListener('click', () => {
+            const totalFireUnits = calculateFireUnits(); // Recalculate total fire units for distribution
+            const distribution = distributeFireUnits(totalFireUnits);
+const distributionResultText = `
+Distributed Rounds:
+  - 105 MM IFG/LFG/ABBOT: ${distribution.A}
+    - Comparative Round ("/"): ${(distribution.A / comparativeRatios["A"]).toFixed(2)}
+    - Comparative Round ("*"): ${(distribution.A * comparativeRatios["A"]).toFixed(2)}
+
+  - 130 MM/122 MM: ${distribution.B}
+    - Comparative Round ("/"): ${(distribution.B / comparativeRatios["B"]).toFixed(2)}
+    - Comparative Round ("*"): ${(distribution.B * comparativeRatios["B"]).toFixed(2)}
+
+  - 155 MM: ${distribution.C}
+    - Comparative Round ("/"): ${(distribution.C / comparativeRatios["C"]).toFixed(2)}
+    - Comparative Round ("*"): ${(distribution.C * comparativeRatios["C"]).toFixed(2)}
+
+  - 120 MM MOR: ${distribution.D}
+    - Comparative Round ("/"): ${(distribution.D / comparativeRatios["D"]).toFixed(2)}
+    - Comparative Round ("*"): ${(distribution.D * comparativeRatios["D"]).toFixed(2)}
+`;
+
+document.getElementById('result').innerText += `\n${distributionResultText}`; // Append distribution result
+
+
+        });
+
+
+    </script>
 </body>
 </html>
-
-
-
-
-<script>
-    const baseFireUnitsData = {
-        "A": {
-            "1B": {
-                "150": { "open": { "moderate": 5, "high": 7 }, "close": { "moderate": 23, "high": 35 } },
-                "200": { "open": { "moderate": 8, "high": 12 }, "close": { "moderate": 39, "high": 60 } },
-                "250": { "open": { "moderate": 12, "high": 18 }, "close": { "moderate": 0, "high": 0 } },
-                "300": { "open": { "moderate": 18, "high": 27 }, "close": { "moderate": 0, "high": 0 } }
-            },
-            "2B": {
-                "150": { "open": { "moderate": 2, "high": 3 }, "close": { "moderate": 10, "high": 15 } },
-                "200": { "open": { "moderate": 4, "high": 5 }, "close": { "moderate": 16, "high": 25 } },
-                "250": { "open": { "moderate": 5, "high": 8 }, "close": { "moderate": 0, "high": 0 } },
-                "300": { "open": { "moderate": 7, "high": 21 }, "close": { "moderate": 0, "high": 0 } }
-            },
-            "1R": {
-                "150": { "open": { "moderate": 0, "high": 2 }, "close": { "moderate": 6, "high": 9 } },
-                "200": { "open": { "moderate": 2, "high": 3 }, "close": { "moderate": 8, "high": 12 } },
-                "250": { "open": { "moderate": 3, "high": 4 }, "close": { "moderate": 9, "high": 13 } },
-                "300": { "open": { "moderate": 7, "high": 21 }, "close": { "moderate": 0, "high": 0 } }
-            },
-            "2R": {
-                "150": { "open": { "moderate": 0, "high": 1 }, "close": { "moderate": 3, "high": 4 } },
-                "200": { "open": { "moderate": 1, "high": 0 }, "close": { "moderate": 3, "high": 4 } },
-                "250": { "open": { "moderate": 0, "high": 0 }, "close": { "moderate": 3, "high": 5 } },
-                "300": { "open": { "moderate": 2, "high": 3 }, "close": { "moderate": 0, "high": 0 } }
-            }
-        },
-        "B": {
-            "1B": {
-                "150": { "open": { "moderate": 4, "high": 5 }, "close": { "moderate": 17, "high": 25 } },
-                "200": { "open": { "moderate": 6, "high": 9 }, "close": { "moderate": 25, "high": 41 } },
-                "250": { "open": { "moderate": 9, "high": 13 }, "close": { "moderate": 0, "high": 0 } },
-                "300": { "open": { "moderate": 13, "high": 20 }, "close": { "moderate": 0, "high": 0 } }
-            },
-            "2B": {
-                "150": { "open": { "moderate": 2, "high": 2 }, "close": { "moderate": 7, "high": 11 } },
-                "200": { "open": { "moderate": 3, "high": 4 }, "close": { "moderate": 11, "high": 17 } },
-                "250": { "open": { "moderate": 4, "high": 6 }, "close": { "moderate": 14, "high": 22 } },
-                "300": { "open": { "moderate": 5, "high": 8 }, "close": { "moderate": 0, "high": 0 } }
-            },
-            "1R": {
-                "150": { "open": { "moderate": 0, "high": 0 }, "close": { "moderate": 4, "high": 7 } },
-                "200": { "open": { "moderate": 2, "high": 2 }, "close": { "moderate": 6, "high": 9 } },
-                "250": { "open": { "moderate": 2, "high": 3 }, "close": { "moderate": 7, "high": 9 } },
-                "300": { "open": { "moderate": 3, "high": 5 }, "close": { "moderate": 9, "high": 14 } }
-            },
-            "2R": {
-                "150": { "open": { "moderate": 0, "high": 0 }, "close": { "moderate": 2, "high": 3 } },
-                "200": { "open": { "moderate": 0, "high": 1 }, "close": { "moderate": 2, "high": 3 } },
-                "250": { "open": { "moderate": 1, "high": 0 }, "close": { "moderate": 2, "high": 4 } },
-                "300": { "open": { "moderate": 0, "high": 2 }, "close": { "moderate": 4, "high": 7 } }
-            }
-        },
-
-        "C": {
-            "1B": {
-                "150": { "open": { "moderate": 2, "high": 3 }, "close": { "moderate": 10, "high": 14 } },
-                "200": { "open": { "moderate": 4, "high": 5 }, "close": { "moderate": 16, "high": 24 } },
-                "250": { "open": { "moderate": 5, "high": 8 }, "close": { "moderate": 0, "high": 0 } },
-                "300": { "open": { "moderate": 8, "high": 11 }, "close": { "moderate": 0, "high": 0 } }
-            },
-            "2B": {
-                "150": { "open": { "moderate": 1, "high": 2 }, "close": { "moderate": 4, "high": 6 } },
-                "200": { "open": { "moderate": 2, "high": 2 }, "close": { "moderate": 7, "high": 10 } },
-                "250": { "open": { "moderate": 2, "high": 4 }, "close": { "moderate": 0, "high": 0 } },
-                "300": { "open": { "moderate": 3, "high": 5 }, "close": { "moderate": 0, "high": 0 } }
-            },
-            "1R": {
-                "150": { "open": { "moderate": 0, "high": 1 }, "close": { "moderate": 3, "high": 2 } },
-                "200": { "open": { "moderate": 1, "high": 0 }, "close": { "moderate": 4, "high": 3 } },
-                "250": { "open": { "moderate": 2, "high": 2 }, "close": { "moderate": 4, "high": 6 } },
-                "300": { "open": { "moderate": 2, "high": 3 }, "close": { "moderate": 6, "high": 8 } }
-            },
-            "2R": {
-                "150": { "open": { "moderate": 0, "high": 1 }, "close": { "moderate": 2, "high": 2 } },
-                "200": { "open": { "moderate": 1, "high": 0 }, "close": { "moderate": 2, "high": 2 } },
-                "250": { "open": { "moderate": 0, "high": 0 }, "close": { "moderate": 2, "high": 2 } },
-                "300": { "open": { "moderate": 1, "high": 2 }, "close": { "moderate": 3, "high": 4 } }
-            }
-        },
-
-        "D": {
-            "1B": {
-                "150": { "open": { "moderate": 4, "high": 6 }, "close": { "moderate": 20, "high": 30 } },
-                "200": { "open": { "moderate": 7, "high": 11 }, "close": { "moderate": 33, "high": 52 } },
-                "250": { "open": { "moderate": 18, "high": 16 }, "close": { "moderate": 0, "high": 0 } },
-                "300": { "open": { "moderate": 16, "high": 23 }, "close": { "moderate": 0, "high": 0 } }
-            },
-            "1R": {
-                "150": { "open": { "moderate": 2, "high": 2 }, "close": { "moderate": 9, "high": 13 } },
-                "200": { "open": { "moderate": 3, "high": 4 }, "close": { "moderate": 14, "high": 22 } },
-                "250": { "open": { "moderate": 4, "high": 7 }, "close": { "moderate": 17, "high": 26 } },
-                "300": { "open": { "moderate": 6, "high": 10 }, "close": { "moderate": 6, "high": 8 } }
-            }
-        }
-    };
-    const fireUnitMultipliers = {
-        "1B": 6,
-        "2B": 8,
-        "1R": 18,
-        "2R": 36
-    };
-
-    const calculateFireUnits = () => {
-
-        const selectedGun = document.getElementById('gun').value;
-        const selectedFireUnit = document.getElementById('fireUnit').value;
-        const selectedSize = document.getElementById('sizeRange').value;
-        const selectedTerrain = document.querySelector('input[name="terrain"]:checked').value;
-        const selectedModHigh = document.querySelector('input[name="modHigh"]:checked').value;
-
-        const isSnowChecked = document.getElementById('snow').checked;
-        const isAmnChecked = document.getElementById('amn').checked;
-        const isMechChecked = document.getElementById('mech').checked;
-        const isHaChecked = document.getElementById('ha').checked;
-        const isSphbeChecked = document.getElementById('sphb').checked;
-        const isOhptwoChecked = document.getElementById('ohptwo').checked;
-        const isOhpChecked = document.getElementById('ohp').checked;
-        const isOhpfourChecked = document.getElementById('ohpfour').checked;
-
-
-        const baseFireUnits = baseFireUnitsData[selectedGun][selectedFireUnit][selectedSize][selectedTerrain][selectedModHigh];
-
-        let totalMultiplier = 1;
-        if (isSnowChecked) totalMultiplier += 1.5 - 1; // Add 50% extra
-        if (isAmnChecked) totalMultiplier += 0.5 - 1; // Subtract 50%
-        if (isMechChecked) totalMultiplier += 0.3 - 1; // Subtract 70%
-        if (isHaChecked) totalMultiplier += 1.25 - 1; // Add 25%
-        if (isSphbeChecked) totalMultiplier += 1.25 - 1; // Add 25%
-        if (isOhptwoChecked) totalMultiplier += 2 - 1; // Add 100%
-        if (isOhpChecked) totalMultiplier += 3 - 1; // Add 200%
-        if (isOhpfourChecked) totalMultiplier += 4 - 1; // Add 300%
-        let totalFireUnits = baseFireUnits * totalMultiplier;
-
-        if (baseFireUnits !== undefined) {
-                const selectedFireUnit = document.getElementById('fireUnit').value;
-
-            const multiplier = fireUnitMultipliers[selectedFireUnit] || 1; // Default to 1 if no multiplier found
-            totalFireUnits = totalFireUnits * multiplier;
-
-            document.getElementById('result').textContent = `Total Rounds: ${totalFireUnits}`;
-        } else {
-            document.getElementById('result').textContent = 'Invalid selection. Please check your inputs.';
-        }
-        return totalFireUnits;
-    };
-
-    const distributeFireUnits = (totalFireUnits) => {
-        const percentageA = parseFloat(document.getElementById('percentageA').value) || 0;
-        const percentageB = parseFloat(document.getElementById('percentageB').value) || 0;
-        const percentageC = parseFloat(document.getElementById('percentageC').value) || 0;
-        const percentageD = parseFloat(document.getElementById('percentageD').value) || 0;
-
-        const totalPercentage = percentageA + percentageB + percentageC + percentageD;
-
-        if (totalPercentage === 0) {
-            return { A: 0, B: 0, C: 0, D: 0 };
-        }
-
-        return {
-            A: (totalFireUnits * (percentageA / totalPercentage)).toFixed(2),
-            B: (totalFireUnits * (percentageB / totalPercentage)).toFixed(2),
-            C: (totalFireUnits * (percentageC / totalPercentage)).toFixed(2),
-            D: (totalFireUnits * (percentageD / totalPercentage)).toFixed(2),
-        };
-    };
-
-    document.getElementById('calculateButton').addEventListener('click', () => {
-        const totalFireUnits = calculateFireUnits();
-        const resultText = `Total Fire Units: ${totalFireUnits}`;
-        document.getElementById('result').innerText = resultText;
-        document.getElementById('percentageInputs').style.display = 'block';  // Show percentage inputs
-        document.getElementById('distributeButton').style.display = 'block'; // Show distribute button
-    });
-
-    document.getElementById('distributeButton').addEventListener('click', () => {
-        const totalFireUnits = calculateFireUnits();
-        const distribution = distributeFireUnits(totalFireUnits);
-        const distributionResultText = `
-        Distributed Rounds - 
-        105 MM IFG/LFG/ABBOT: ${distribution.A}, 
-        130 MM/122 MM: ${distribution.B}, 
-        155 MM: ${distribution.C}, 
-        120 MM MOR: ${distribution.D}`;            
-        document.getElementById('result').innerText += `\n${distributionResultText}`;
-    });
-
-
-</script>
